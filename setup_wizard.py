@@ -4,22 +4,24 @@ import os
 
 try:
     process = subprocess.run(
-        [sys.executable, "-m", "pip", "freeze -vvv -r", "requirements.txt"],
+        [sys.executable, "-m", "pip", "freeze", "-vvv", "-r", "requirements.txt"],
             capture_output=True,
             text=True,
             check=False
         )
 
-    if process.returncode != 0:
+    if process.stderr.strip() != "":
         print("\nSome requirements are not satisified. Please run: pip install -r requirements.txt")
         print("It is also recommended to run this app in a Python VENV. THIS HAS TO BE DONE BEFORE INSTALLING PACKAGES!")
         print("You can create a VENV using this command (provided you have virtualenv installed): python -m venv ./venv")
         print("...and then run it with one of the scripts in ./venv/Scripts\n")
+        print("Detailed output of pip:")
+        print(process.stderr)
         exit()
 except FileNotFoundError:
-        print("\nPIP was not found, please ensure it is in your PATH.\n")
+        print("\n`pip` was not found, please ensure it is in your PATH.\n")
 except subprocess.CalledProcessError as e:
-        print(f"\nError occured when running PIP: {e}\n")
+        print(f"\nError occured when running pip: {e}\n")
 
 try:
     from cryptography.hazmat.primitives.asymmetric import rsa
