@@ -63,10 +63,11 @@ class licenses(Resource):
     @is_admin
     def get(self, user_id="", is_admin=False, license_id="", requested_license_detail=""):
         licenses_collection = None
+        query_user_id = request.args["user_id"]
 
         # ?user_id=me macro
-        if "user_id" in request.args.keys() and request.args["user_id"] == "me":
-            request.args["user_id"] = user_id
+        if query_user_id == "me":
+            query_user_id = user_id
         
         if license_id != "" and not is_valid_objectid(license_id):
             return {'message': 'License not found.'}, 404 
@@ -88,12 +89,10 @@ class licenses(Resource):
         elif license_id == "" and requested_license_detail == "":
 
             # /licenses?user_id=
-            if ("user_id" in request.args.keys()) and is_valid_objectid(request.args["user_id"]) and user_id == request.args["user_id"]:
-                licenses_collection = self.db_client[config.LICENSES_COLLECTION].find({"user_id": (request.args["user_id"] if is_admin else user_id)})
-            
-            elif "user_id" in request.args.keys():
+            if query_user_id and is_valid_objectid(query_user_id):
+                licenses_collection = self.db_client[config.LICENSES_COLLECTION].find({"user_id": (query_user_id if is_admin else user_id)})
+            elif query_user_id:
                 return jsonify(list())
-            
 
             # /licenses
             elif len(request.args.listvalues()) == 0:
@@ -103,12 +102,10 @@ class licenses(Resource):
                 # /licenses for normal USER
                 else:
                     return {'message': 'Endpoint access unauthorized. You can try accessing it with `?user_id=me`.'}, 401
-                
 
             # /licenses with any other ? query
             else:
                 return {'message': 'Unsupported query in URL.'}, 400
-        
 
         
         # /licenses/<license_id>/binded_hardware_id

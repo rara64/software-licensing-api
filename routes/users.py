@@ -193,6 +193,9 @@ class users(Resource):
         if not is_valid_objectid(requested_user_id):
             return {'message': 'User not found.'}, 404
         
+        if requested_user_id == user_id:
+            return {'message': 'You cannot delete yourself.'}, 400
+        
         user = self.db_client[config.USERS_COLLECTION].find_one({"_id": ObjectId(requested_user_id)})
         if user:
             self.db_client[config.USERS_COLLECTION].delete_one({"_id": ObjectId(requested_user_id)})

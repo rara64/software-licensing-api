@@ -34,6 +34,7 @@ try:
     import re
     import secrets
     import base64
+    import urllib.parse
     from modules.validator import is_valid_username
 except ImportError:
     pass
@@ -44,11 +45,17 @@ if os.path.isfile(".env"):
     print("[ERROR] .env file with configuration already exists, please remove it before using the setup wizard.\n")
     exit()
 
-print("Please provide a MongoDB connection string (e.g. mongodb://localhost:27017/)")
+print("Please provide a MongoDB connection string WITHOUT credentials (e.g. mongodb://localhost:27017/)")
 MONGO_STRING = input()
-while not MONGO_STRING.strip().startswith("mongodb://") or not MONGO_STRING.strip().endswith("/"):
-    print("\n[ERROR] Please provide a MongoDB connection string that starts with 'mongodb://' and ends with '/':")
+while not MONGO_STRING.strip().startswith("mongodb://") or not MONGO_STRING.strip().startswith("mongodb+srv://"):
+    print("\n[ERROR] Please provide a MongoDB connection string that starts with 'mongodb://' or mongodb+srv://' :")
     MONGO_STRING = input()
+
+print("Please provide a user for MongoDB connection string (leave empty if not needed):")
+MONGO_USERNAME = urllib.parse.quote_plus(input())
+
+print("Please provide a password for MongoDB connection string (leave empty if not needed):")
+MONGO_PASSWORD = urllib.parse.quote_plus(input())
 
 print("Please provide a database name for MongoDB (e.g. api)")
 MONGO_DBNAME = input()
@@ -73,6 +80,9 @@ print("\nLet's now verify the MongoDB connection and create an admin user - this
 mongodb_connected = False
 while not mongodb_connected:
     try:
+        if MONGO_USERNAME and MONGO_PASSWORD:
+            MONGO_STRING = MONGO_STRING.replace("://", f"://{MONGO_USERNAME}:{MONGO_PASSWORD}@")
+            
         mongo_client = MongoClient(MONGO_STRING)[MONGO_DBNAME]
         mongodb_connected = True
     except Exception as e:
