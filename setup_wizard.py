@@ -47,7 +47,7 @@ if os.path.isfile(".env"):
 
 print("Please provide a MongoDB connection string WITHOUT credentials (e.g. mongodb://localhost:27017/)")
 MONGO_STRING = input()
-while not MONGO_STRING.strip().startswith("mongodb://") or not MONGO_STRING.strip().startswith("mongodb+srv://"):
+while not MONGO_STRING.strip().startswith(("mongodb://","mongodb+srv://")):
     print("\n[ERROR] Please provide a MongoDB connection string that starts with 'mongodb://' or mongodb+srv://' :")
     MONGO_STRING = input()
 
@@ -84,11 +84,16 @@ while not mongodb_connected:
             MONGO_STRING = MONGO_STRING.replace("://", f"://{MONGO_USERNAME}:{MONGO_PASSWORD}@")
             
         mongo_client = MongoClient(MONGO_STRING)[MONGO_DBNAME]
+        mongo_client.command("ping")
         mongodb_connected = True
     except Exception as e:
         print(f"\n[ERROR] An error occured while connecting to a MongoDB server. {e}\n")
         print("Please provide a valid MongoDB connection string:")
         MONGO_STRING = input()
+        print("Please provide a user for MongoDB connection string (leave empty if not needed):")
+        MONGO_USERNAME = urllib.parse.quote_plus(input())
+        print("Please provide a password for MongoDB connection string (leave empty if not needed):")
+        MONGO_PASSWORD = urllib.parse.quote_plus(input())
 
 print("\nConnection to a MongoDB server was successful.\n")
 print("Please provide a username for admin user. (e.g. admin or something random so it isn't obvious it's an admin account)")
