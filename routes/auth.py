@@ -1,6 +1,7 @@
 from flask_restful import Resource, request
 from modules.authentication import generate_token
 from config import config
+from modules.limiter import limiter
 import bcrypt
 import pyotp
 
@@ -17,6 +18,7 @@ class auth(Resource):
         "password":""
     }
     """
+    #@limiter.limit(f"{config.AUTH_LIMITER_PER_HOUR} per hour | {config.AUTH_LIMITER_PER_DAY} per day")
     def post(self):
         data = request.get_json()
         username = data.get("username")

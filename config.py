@@ -14,6 +14,7 @@ class Config:
         self.AUTH_LIMITER_PER_HOUR = os.getenv("AUTH_LIMITER_PER_HOUR")
         self.ADMIN_ID = os.getenv("ADMIN_ID")
         self.ADMIN_OTP_SECRET = os.getenv("ADMIN_OTP_SECRET")
+        self.CHECKSUMS_COLLECTION = os.getenv("CHECKSUMS_COLLECTION")
         self.LICENSES_COLLECTION = os.getenv("LICENSES_COLLECTION")
         self.LICENSE_PUBLIC_KEY = os.getenv("LICENSE_PUBLIC_KEY")
         self.LICENSE_PRIVATE_KEY = os.getenv("LICENSE_PRIVATE_KEY")

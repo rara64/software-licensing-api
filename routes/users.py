@@ -49,7 +49,6 @@ class users(Resource):
 
     @authenticated
     @is_admin
-    @limiter.exempt
     def get(self, is_admin=False, user_id="", requested_user_id="", requested_user_detail=""):
 
         users_collection = None
@@ -84,9 +83,11 @@ class users(Resource):
                 if not users_collection:
                     return {'message': 'User not found.'}, 404
                 
-                licenses_collection = self.db_client[config.LICENSES_COLLECTION].find({"user_id": user_id}, {"user_id": 0})
+                licenses_collection = self.db_client[config.LICENSES_COLLECTION].find({"user_id": requested_user_id}, {"user_id": 0})
 
                 users_collection["licenses"] = list(licenses_collection)
+
+                return json.loads(json.dumps(users_collection, default=str))
 
             # /users/<requested_user_id>/<requested_user_detail>
             elif requested_user_id != "" and requested_user_detail != "":
@@ -150,7 +151,7 @@ class users(Resource):
         "email": ""
     }
     """
-    @limiter.exempt
+    
     @admin_only
     def post(self, user_id="", requested_user_id="", requested_user_detail=""):
         if requested_user_id != "" or requested_user_detail != "":
@@ -184,7 +185,7 @@ class users(Resource):
     /users/<requested_user_id> DELETE
     Delete a user
     """
-    @limiter.exempt
+    
     @admin_only
     def delete(self, user_id="", requested_user_id="", requested_user_detail=""):
         if requested_user_detail != "":
@@ -228,10 +229,13 @@ class users(Resource):
         "password":""
     }
     """
-    @limiter.exempt
+    
     @authenticated
     @is_admin
     def patch(self, is_admin=False, user_id="", requested_user_id="", requested_user_detail=""):
+        if requested_user_id == "":
+            return {'message': 'No user specified.'}, 400
+        
         if requested_user_detail != "":
             return {'message': 'Unsupported operation.'}, 400  
         
@@ -308,7 +312,7 @@ class users(Resource):
             
                 if new_password:
                     hashed_password = bcrypt.hashpw(bytes(new_password, 'utf-8'), bcrypt.gensalt())
-                    new_data["username"] = new_username
+                    new_data["password"] = hashed_password
 
                 if new_data != {}:
                     self.db_client[config.USERS_COLLECTION].update_one({"_id": ObjectId(user_id)},
@@ -317,7 +321,7 @@ class users(Resource):
                 else:
                     return {'message': 'No new data specified in request body.'}, 400
             
-    @limiter.exempt
+    
     @authenticated
-    def put(self, requested_user_id = "", requested_user_detail = ""):
+    def put(self, user_id="", requested_user_id = "", requested_user_detail = ""):
         return {'message': 'PUT requests are not supported for users. Use PATCH to update user details.'}, 400

@@ -25,7 +25,7 @@ def authenticated(f):
             if datetime.now(timezone.utc) > datetime.fromisoformat(expiry_date):
                 raise Exception
         except:
-            return {"message":"Route access unauthorized."}, 401
+            return {"message":"Access unauthorized."}, 401
         
         return f(user_id=payload["user_id"], *args, **kwargs)
     return decorated
@@ -67,7 +67,7 @@ def admin_only(f):
             if datetime.now(timezone.utc) > datetime.fromisoformat(expiry_date):
                 raise Exception
         except Exception:
-            return {"message":"Route access unauthorized."}, 401
+            return {"message":"Access unauthorized."}, 401
 
         return f(user_id=payload["user_id"], *args, **kwargs)
     return decorated

@@ -16,23 +16,23 @@ def get_license_details(requested_license_detail, db_client, license_id, user_id
     match requested_license_detail:
         case "binded_hardware_id":
             licenses_collection = db_client[config.LICENSES_COLLECTION].find_one(
-                {"license_id": ObjectId(license_id)} if is_admin else {"license_id": ObjectId(license_id), "user_id": user_id},
+                {"_id": ObjectId(license_id)} if is_admin else {"_id": ObjectId(license_id), "user_id": user_id},
                 {"binded_hardware_id": 1, "_id": 0})
         case "license_key":
             licenses_collection = db_client[config.LICENSES_COLLECTION].find_one(
-                {"license_id": ObjectId(license_id)} if is_admin else {"license_id": ObjectId(license_id), "user_id": user_id},
+                {"_id": ObjectId(license_id)} if is_admin else {"_id": ObjectId(license_id), "user_id": user_id},
                 {"license_key": 1, "_id": 0})
         case "issued_at":
               licenses_collection = db_client[config.LICENSES_COLLECTION].find_one(
-                {"license_id": ObjectId(license_id)} if is_admin else {"license_id": ObjectId(license_id), "user_id": user_id},
+                {"_id": ObjectId(license_id)} if is_admin else {"_id": ObjectId(license_id), "user_id": user_id},
                 {"issued_at": 1, "_id": 0})
         case "last_activated_at":
             licenses_collection = db_client[config.LICENSES_COLLECTION].find_one(
-                {"license_id": ObjectId(license_id)} if is_admin else {"license_id": ObjectId(license_id), "user_id": user_id},
+                {"_id": ObjectId(license_id)} if is_admin else {"_id": ObjectId(license_id), "user_id": user_id},
                 {"last_activated_at": 1, "_id": 0})
         case "user_id":
             licenses_collection = db_client[config.LICENSES_COLLECTION].find_one(
-                {"license_id": ObjectId(license_id)} if is_admin else {"license_id": ObjectId(license_id), "user_id": user_id},
+                {"_id": ObjectId(license_id)} if is_admin else {"_id": ObjectId(license_id), "user_id": user_id},
                 {"user_id": 1, "_id": 0})
 
     return licenses_collection
@@ -58,12 +58,12 @@ class licenses(Resource):
     Retrieve information about licenses
     When authenticated as a normal user, you get access to licenses assigned to your account
     """
-    @limiter.exempt
+    
     @authenticated
     @is_admin
     def get(self, user_id="", is_admin=False, license_id="", requested_license_detail=""):
         licenses_collection = None
-        query_user_id = request.args["user_id"]
+        query_user_id = request.args["user_id"] if "user_id" in request.args.keys() else None
 
         # ?user_id=me macro
         if query_user_id == "me":
@@ -76,7 +76,7 @@ class licenses(Resource):
         if license_id != "" and requested_license_detail == "":
 
             licenses_collection = self.db_client[config.LICENSES_COLLECTION].find_one(
-                    {"license_id": ObjectId(license_id)} if is_admin else {"user_id": user_id, "license_id": ObjectId(license_id)},
+                    {"_id": ObjectId(license_id)} if is_admin else {"user_id": user_id, "_id": ObjectId(license_id)},
                     {"_id": 0})
             
             if not licenses_collection:
@@ -117,12 +117,12 @@ class licenses(Resource):
 
             if requested_license_detail not in ["binded_hardware_id", "license_key", "user_id", "issued_at", "last_activated_at"]:
                 return {'message': "Requested license detail doesn't exist."}, 404
-            
+
             # /licenses/<license_id>/<requested_license_detail>
             licenses_collection = get_license_details(requested_license_detail=requested_license_detail, db_client=self.db_client, license_id=license_id, user_id=user_id, is_admin=is_admin)
 
             if not licenses_collection:
-                return {'message': 'License not found.'}, 404 
+                return {'message': 'License not found or empty value.'}, 404 
             else:
                 return json.loads(json.dumps(licenses_collection, default=str))
 
@@ -137,7 +137,7 @@ class licenses(Resource):
         "user_id": ""
     }
     """
-    @limiter.exempt
+    
     @admin_only
     def post(self, user_id="", license_key="", requested_license_detail=""):
         if requested_license_detail != "":
@@ -160,7 +160,7 @@ class licenses(Resource):
     /licenses/<license_id> DELETE
     Remove a license key
     """
-    @limiter.exempt
+    
     @admin_only
     def delete(self, user_id="", license_id="", requested_license_detail=""):
         if requested_license_detail != "":
@@ -190,7 +190,7 @@ class licenses(Resource):
         "binded_hardware_id:""
     }
     """
-    @limiter.exempt
+    
     @admin_only
     def patch(self, user_id="", license_id="", requested_license_detail=""):
         if not is_valid_objectid(license_id):
@@ -221,7 +221,7 @@ class licenses(Resource):
 
         return {'message': 'License not found.'}, 404
     
-    @limiter.exempt
+    
     @admin_only
     def put(self, user_id="", license_key="", requested_license_detail=""):
         return {'message': 'PUT requests are not supported for licenses. Use PATCH to update license details.'}, 400

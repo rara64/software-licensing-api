@@ -72,8 +72,14 @@ while not re.match(r"^[A-Za-z]+$", USERS_COLLECTION):
 print("Please provide a name for the licenses collection (e.g. licenses)")
 LICENSES_COLLECTION = input()
 while LICENSES_COLLECTION == USERS_COLLECTION or not re.match(r"^[A-Za-z]+$", LICENSES_COLLECTION):
-    print("\n[ERROR] Please provide a valid name that consists only of upper or lower letters and is not the same as for the users collection:")
+    print("\n[ERROR] Please provide a valid name that consists only of upper or lower letters and is not the same as for the previous collections:")
     LICENSES_COLLECTION = input()
+
+print("Please provide a name for the checksums collection (e.g. checksums)")
+CHECKSUMS_COLLECTION = input()
+while (CHECKSUMS_COLLECTION in [LICENSES_COLLECTION, USERS_COLLECTION]) and not re.match(r"^[A-Za-z]+$", CHECKSUMS_COLLECTION):
+    print("\n[ERROR] Please provide a valid name that consists only of upper or lower letters and is not the same as for the previous collections:")
+    CHECKSUMS_COLLECTION = input()
 
 print("\nLet's now verify the MongoDB connection and create an admin user - this user will be used for managing users and licenses.")
 
@@ -200,6 +206,7 @@ with open(".env", "w") as ENV:
     ENV.write(f'MONGO_DBNAME="{MONGO_DBNAME}"\n')
     ENV.write(f'USERS_COLLECTION="{USERS_COLLECTION}"\n')
     ENV.write(f'LICENSES_COLLECTION="{LICENSES_COLLECTION}"\n')
+    ENV.write(f'CHECKSUMS_COLLECTION="{CHECKSUMS_COLLECTION}"\n')
     ENV.write(f'JWT_SECRET="{JWT_SECRET}"\n')
     ENV.write(f'TOKEN_KEEPALIVE_MINUTES="{JWT_KEEPALIVE_MINUTES}"\n')
     ENV.write(f'AUTH_LIMITER_PER_DAY="{AUTH_LIMITER_PER_DAY}"\n')
