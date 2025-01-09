@@ -9,6 +9,8 @@ This is a university project developed with **Python (Flask)** and **MongoDB**, 
     python setup_wizard.py
     ```
     This will guide you through configuring the `.env` file for the API.
+2. **Checkout the project's wiki:**
+   - [Project's wiki](https://github.com/rara64/software-licensing-api/wiki)
 
 ## API Endpoints
 
@@ -27,15 +29,24 @@ List of all available endpoints is in the project's wiki:
 | `/auth`       | Authentication endpoint                        |
 | `/activate`   | Endpoint to activate a software license       |
 
+## API Security Overview
+
+- Most endpoints are available only to authenticated users.
+- Each user authenticates using a JWT token which holds the user ID and an expiry date.
+- Users acquire JWT tokens using the `/auth` endpoint by providing a valid username and password.
+  - On top of that, admin user has to provide a one-time password when 2FA is enabled.
+- Most CRUD operations are not available to normal users.
+- Only the admin user created using the setup wizard can perform full CRUD operations.
+
 ## Licensing System Overview
 
 Project uses **RSA 2048-bit** cryptography keys for generating and veryfing signatures which are treated as license files.
 -   Each license key is tied to a unique hardware ID, preventing use on other machines.
 -   API uses a private key to sign licenses, and a matching public key is used to verify them.
 
-| **API**     | **Application**                                       |
+| **API**     | **Application**  |
 | ------------- | ------------------------------------------ |
-| Holds the **PRIVATE KEY** 🔑      |      Holds the **PUBLIC KEY** 🔑           |
+| Holds the **PRIVATE KEY** 🔑 | Holds the **PUBLIC KEY** 🔑 |
 
 ### Activation Process
 
