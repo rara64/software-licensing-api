@@ -8,6 +8,40 @@ import json
 import pyotp
 from modules.validator import is_valid_email, is_valid_username, is_valid_objectid
 
+def get_specific_user(requested_user_id, user_id, db_client, is_admin=False):
+    user_data = db_client[config.USERS_COLLECTION].aggregate([
+        {
+            "$match": {"_id": ObjectId(requested_user_id if is_admin else user_id)}
+        },
+        {
+            "$lookup": {
+                "from": config.LICENSES_COLLECTION,
+                "let": {"user_oid": "$_id"},
+                "pipeline": [
+                    {
+                        "$match": {
+                            "$expr": {
+                                "$eq": [
+                                    {"$toString": "$$user_oid"},
+                                    "$user_id"
+                                ]
+                            }
+                        }
+                    }
+                ],
+                "as": "licenses"
+            }
+        },
+        {
+            "$project": {
+                "password": 0,
+                "licenses.user_id": 0
+            }
+        }
+    ])
+    user_data = list(user_data)
+    return (user_data[0])
+
 def get_user_details(requested_user_detail, requested_user_id, db_client, user_id, is_admin=False):
     
     collection = None
@@ -78,15 +112,12 @@ class users(Resource):
             # /users/<requested_user_id>
             elif requested_user_id != "" and requested_user_detail == "":
 
-                users_collection = self.db_client[config.USERS_COLLECTION].find_one({"_id": ObjectId(requested_user_id)}, {"password": 0})
+                user = self.db_client[config.USERS_COLLECTION].find_one({"_id": ObjectId(requested_user_id)})
 
-                if not users_collection:
+                if not user:
                     return {'message': 'User not found.'}, 404
                 
-                licenses_collection = self.db_client[config.LICENSES_COLLECTION].find({"user_id": requested_user_id}, {"user_id": 0})
-
-                users_collection["licenses"] = list(licenses_collection)
-
+                users_collection = get_specific_user(user_id=user_id, requested_user_id=requested_user_id, db_client=self.db_client, is_admin=is_admin)
                 return json.loads(json.dumps(users_collection, default=str))
 
             # /users/<requested_user_id>/<requested_user_detail>
@@ -128,11 +159,7 @@ class users(Resource):
             
             # /users/<requested_user_id>
             if requested_user_detail == "" and requested_user_id != "":
-                users_collection = self.db_client[config.USERS_COLLECTION].find_one({"_id": ObjectId(user_id)}, {"password":0})
-
-                licenses_collection = self.db_client[config.LICENSES_COLLECTION].find({"user_id": user_id}, {"user_id": 0})
-
-                users_collection["licenses"] = list(licenses_collection)
+                users_collection = get_specific_user(user_id=user_id, requested_user_id=requested_user_id, db_client=self.db_client, is_admin=is_admin)
 
             # /users
             if requested_user_id == "" and requested_user_detail == "":
