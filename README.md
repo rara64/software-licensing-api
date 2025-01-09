@@ -9,7 +9,11 @@ This is a university project developed with **Python (Flask)** and **MongoDB**, 
     python setup_wizard.py
     ```
     This will guide you through configuring the `.env` file for the API.
-2. **Checkout the project's wiki:**
+2. **Run the API:**
+   ```bash
+   python app.py
+   ```
+3. **Checkout the project's wiki:**
    - [Project's wiki](https://github.com/rara64/software-licensing-api/wiki)
 
 ## API Endpoints
@@ -67,4 +71,4 @@ Project uses **RSA 2048-bit** cryptography keys for generating and veryfing sign
 
 ## Demo Application
 
-You can find a demo application written in C# to test the licensing system here: [Demo C# Application](https://github.com/rara64/software-licensing-api/blob/main/demo_app/Program.cs)
+You can find a demo application written in C# to test the licensing system here: [Demo .NET 8 C# Application](https://github.com/rara64/software-licensing-api/blob/main/demo_app/Program.cs)
