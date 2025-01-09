@@ -13,6 +13,7 @@ This is a university project developed with **Python (Flask)** and **MongoDB**, 
    ```bash
    python app.py
    ```
+   API will be available at port `5000`.
 3. **Checkout the project's wiki:**
    - [Project's wiki](https://github.com/rara64/software-licensing-api/wiki)
 
