@@ -250,14 +250,14 @@ class users(Resource):
             if is_admin:
                 user = self.db_client[config.USERS_COLLECTION].find_one({"_id": ObjectId(requested_user_id)})
                 if user:
-
-                    if user.get("_id") == config.ADMIN_ID and config.ADMIN_OTP_SECRET.strip() != "":
+                    data = request.get_json()
+                    
+                    if str(user.get("_id")) == config.ADMIN_ID.strip() and config.ADMIN_OTP_SECRET != "":
                         otp = data.get("otp")
                         totp = pyotp.TOTP(config.ADMIN_OTP_SECRET)
                         if str(otp) != str(totp.now()):
                             return {'message': 'Invalid or no `otp` provided for changing admin details.'}, 401
                 
-                    data = request.get_json()
                     new_email = data.get("email")
                     new_username = data.get("username")
                     new_password = data.get("password")
