@@ -18,7 +18,7 @@ class auth(Resource):
         "password":""
     }
     """
-    #@limiter.limit(f"{config.AUTH_LIMITER_PER_HOUR} per hour | {config.AUTH_LIMITER_PER_DAY} per day")
+    @limiter.limit(f"{config.AUTH_LIMITER_PER_HOUR} per hour | {config.AUTH_LIMITER_PER_DAY} per day")
     def post(self):
         data = request.get_json()
         username = data.get("username")
