@@ -32,6 +32,7 @@ List of all available endpoints is in the project's wiki:
 ## API Security Overview
 
 - Most endpoints are available only to authenticated users.
+- Secrets are stored in a `.env` file.
 - Each user authenticates using a JWT token which holds the user ID and an expiry date.
 - Users acquire JWT tokens using the `/auth` endpoint by providing a valid username and password.
   - On top of that, admin user has to provide a one-time password when 2FA is enabled.
