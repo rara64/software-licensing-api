@@ -1,38 +1,45 @@
-# Software Licensing API
+# 🔒 Software Licensing API
 
 This is a university project developed with **Python (Flask)** and **MongoDB**, as a part of the Non-Relational Database Solutions course. 
 
-## Getting Started
+## **Getting Started**
 
-1. **Run the Setup Wizard:**
-    ```bash
-    python setup_wizard.py
-    ```
-    This will guide you through configuring the `.env` file for the API.
-2. **Run the API:**
+1. **Run the Setup Wizard**  
+   The setup wizard will guide you through configuring the `.env` file for the API.
+   ```bash
+   python setup_wizard.py
+   ```
+
+2. **Run the API**  
+   The API will be available at `https://localhost:5000`.
    ```bash
    python app.py
    ```
-   API will be available at port `5000`.
-3. **Checkout the project's wiki:**
-   - [Project's wiki](https://github.com/rara64/software-licensing-api/wiki)
+
+3. **Check out the Project's Wiki**  
+   For detailed documentation, [visit the wiki](https://github.com/rara64/software-licensing-api/wiki).
 
 ## API Endpoints
 
-List of all available endpoints is in the project's wiki:
+**List of basic endpoints:**
 
--   [**List of Endpoints**](https://github.com/rara64/software-licensing-api/wiki/List-of-endpoints)
+| Endpoint                | Description                                                                                                 |
+| ----------------------- | ----------------------------------------------------------------------------------------------------------- |
+| `GET /`                | A way to check if the API works                                                                             |
+| `GET /users`<br>`POST /users` | CRUD operations for users <br> `GET`: List users <br> `POST`: Create a user <br> (Other methods: `PUT`, `DELETE`) |
+| `GET /licenses`<br>`POST /licenses` | CRUD operations for licenses <br> `GET`: List licenses <br> `POST`: Create a license <br> (Other methods: `PUT`, `DELETE`) |
+| `GET /checksums`<br>`POST /checksums` | CRUD operations for checksums <br> `GET`: List checksums <br> `POST`: Create a checksum <br> (Other methods: `PUT`, `DELETE`) |
+| `POST /auth`            | Authentication endpoint                                                                                     |
+| `POST /activate`        | Endpoint to activate a software license                                                                    |
 
-**Basic Endpoints:**
-
-| Endpoint      | Description                                    |
-| ------------- | ---------------------------------------------- |
-| `/`           | A way to check if the API works   |
-| `/users`      | CRUD operations for users                      |
-| `/licenses`   | CRUD operations for licenses                   |
-| `/checksums`  | CRUD operations for checksums                 |
-| `/auth`       | Authentication endpoint                        |
-| `/activate`   | Endpoint to activate a software license       |
+All endpoints are documented in the wiki:
+-   [**Endpoints**](https://github.com/rara64/software-licensing-api/wiki/endpoints)
+    -  [API Check](https://github.com/rara64/software-licensing-api/wiki/endpoints#api-check)
+    -  [Authenticate](https://github.com/rara64/software-licensing-api/wiki/endpoints#authenticate)
+    -  [Activate a software license](https://github.com/rara64/software-licensing-api/wiki/endpoints#activate-a-software-license)
+    -  [Users Collection](https://github.com/rara64/software-licensing-api/wiki/endpoints#users-collection)
+    -  [Licenses Collection](https://github.com/rara64/software-licensing-api/wiki/endpoints#licenses-collection)
+    -  [Checksums Collection](https://github.com/rara64/software-licensing-api/wiki/endpoints#checksums-collection)
 
 ## API Security Overview
 
