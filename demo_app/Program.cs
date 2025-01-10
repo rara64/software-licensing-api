@@ -124,7 +124,7 @@ class Program
         APITokenRequest tokenRequest = new APITokenRequest()
         {
             username = username,
-            password = password\
+            password = password
         };
 
         var content = new StringContent(JsonSerializer.Serialize(tokenRequest), Encoding.UTF8, "application/json");
