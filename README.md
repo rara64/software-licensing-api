@@ -71,7 +71,12 @@ Project uses **RSA 2048-bit** cryptography keys for generating and veryfing sign
 1. Application sends a request to the `/activate` endpoint. This request includes:
     -   License key
     -   Hardware information identifying the machine
-2. API verifies the provided information and uses its **PRIVATE KEY** 🔑 to generate a signature for the hardware data.
+2. API validates the provided information and uses its **PRIVATE KEY** 🔑 to generate a signature for the hardware data.  
+   - API creates a Base64-encoded hardware ID string composed of all the submitted parameters, joined by a pipe symbol (`|`):  
+     `spec1|spec2|spec3|spec4|spec5`  
+     Hardware ID string is stored in the database in its Base64-encoded form.
+   - API generates a signature for a string that combines the hardware ID string and the license key:  
+     `c3BlYzF8c3BlYzJ8c3BlYzN8c3BlYzR8c3BlYzUXYYUG-AANZN-77824-50018`
 3. Application receives the signature and saves it in a license file.
 
 ### Verification Process
