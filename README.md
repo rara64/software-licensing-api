@@ -3,20 +3,25 @@
 This is a university project developed with **Python (Flask)** and **MongoDB**, as a part of the Non-Relational Database Solutions course. 
 
 ## **Getting Started**
-
-1. **Run the Setup Wizard**  
+1. **Create a virtual python environment**
+2. **Install required packages**
+   <br>Run the command listed below to install all of the required packages.
+   ```bash
+   pip install -r requirements.txt
+   ```
+3. **Run the Setup Wizard**  
    The setup wizard will guide you through configuring the `.env` file for the API.
    ```bash
-   python setup_wizard.py
+   py setup_wizard.py
    ```
 
-2. **Run the API**  
+4. **Run the API**  
    API will be available at `https://localhost:5000`.
    ```bash
-   python app.py
+   py app.py
    ```
 
-3. **Check out the Project's Wiki**  
+5. **Check out the Project's Wiki**  
    For detailed documentation, [visit the wiki](https://github.com/rara64/software-licensing-api/wiki).
 
 ## API Endpoints
