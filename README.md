@@ -11,7 +11,7 @@ This is a university project developed with **Python (Flask)** and **MongoDB**, 
    ```
 
 2. **Run the API**  
-   The API will be available at `https://localhost:5000`.
+   API will be available at `https://localhost:5000`.
    ```bash
    python app.py
    ```
