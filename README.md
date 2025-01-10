@@ -75,7 +75,7 @@ Project uses **RSA 2048-bit** cryptography keys for generating and veryfing sign
    - API creates a Base64-encoded hardware ID string composed of all the submitted parameters, joined by a pipe symbol (`|`):  
      `spec1|spec2|spec3|spec4|spec5`  
      Hardware ID string is stored in the database in its Base64-encoded form.
-   - API generates a signature for a string that combines the hardware ID string and the license key:  
+   - API generates a SHA256 (salt length of 32) signature for a string that combines the hardware ID string and the license key:  
      `c3BlYzF8c3BlYzJ8c3BlYzN8c3BlYzR8c3BlYzUXYYUG-AANZN-77824-50018`
 3. Application receives the signature and saves it in a license file.
 
