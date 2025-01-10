@@ -46,6 +46,5 @@ def get_signed_license(license_key, hardware_id):
     )
 
     license_signature = base64.b64encode(license_file_signed).decode("utf-8")
-    print("Base64 Signature (Python):", license_file_signed)
 
     return license_signature
